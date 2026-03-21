@@ -1,0 +1,59 @@
+# Swift Package Manager
+.build/
+.swiftpm/
+*.resolved
+
+# Xcode
+*.xcodeproj/
+*.xcworkspace/
+xcuserdata/
+DerivedData/
+*.xcscmblueprint
+*.xccheckout
+*.moved-aside
+*.pbxuser
+!default.pbxuser
+*.mode1v3
+!default.mode1v3
+*.mode2v3
+!default.mode2v3
+*.perspectivev3
+!default.perspectivev3
+
+# Build artifacts
+*.o
+*.a
+*.dylib
+*.framework
+*.dSYM/
+build/
+
+# macOS system files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+Icon?
+ehthumbs.db
+Thumbs.db
+
+# Editor
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Environment / secrets
+.env
+*.env.local
+*.env.*.local
+
+# Generated migration output (never commit client project output)
+SwiftUIMigrated/
+SwiftUIProject/
+
+# Test artefacts
+*.lcov
+coverage/
