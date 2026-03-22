@@ -14,6 +14,7 @@ Thank you for considering a contribution! This guide explains how to get involve
 - [Code Style](#code-style)
 - [Testing](#testing)
 - [Commit Messages](#commit-messages)
+- [Branching Strategy](#branching-strategy)
 - [Releasing](#releasing)
 
 ---
@@ -29,7 +30,7 @@ By participating in this project you agree to abide by the [Code of Conduct](COD
 1. **Fork** the repository on GitHub.
 2. **Clone** your fork locally:
    ```bash
-   git clone https://github.com/<your-username>/TransformationSwiftUI.git
+   git clone https://github.com/kanchanproseth/TransformationSwiftUI.git
    cd TransformationSwiftUI
    ```
 3. **Build** to verify everything compiles:
@@ -158,6 +159,16 @@ fix(parser): handle optional chaining in addSubview calls
 docs(readme): document --create-project flag
 test(generator): add tests for visibility state generation
 ```
+
+---
+
+## Branching Strategy
+
+- `main` is the only long-lived branch.
+- All work happens on short-lived feature branches.
+- Open PRs targeting `main`; keep branches focused and easy to review.
+- Prefer squash merges to keep history clean.
+- Releases are created from tags on `main`.
 
 ---
 
