@@ -1,0 +1,70 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v[0-9]*.[0-9]*.[0-9]*'
+
+permissions:
+  contents: write
+
+jobs:
+  build-release-binary:
+    name: Build release binary
+    runs-on: macos-15
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Select Xcode
+        uses: maxim-lobanov/setup-xcode@v1
+        with:
+          xcode-version: latest-stable
+
+      - name: Cache SPM dependencies
+        uses: actions/cache@v4
+        with:
+          path: |
+            .build/checkouts
+            .build/repositories
+          key: spm-release-${{ runner.os }}-${{ hashFiles('Package.resolved') }}
+          restore-keys: |
+            spm-release-${{ runner.os }}-
+
+      - name: Build release binary
+        run: swift build --configuration release
+
+      - name: Package binary
+        run: |
+          cp .build/release/TransformationSwiftUICLI TransformationSwiftUICLI
+          tar -czf TransformationSwiftUICLI-macos.tar.gz TransformationSwiftUICLI
+          shasum -a 256 TransformationSwiftUICLI-macos.tar.gz > TransformationSwiftUICLI-macos.tar.gz.sha256
+
+      - name: Run tests before publishing
+        run: swift test --configuration release --parallel
+
+      - name: Extract changelog entry
+        id: changelog
+        shell: bash
+        run: |
+          TAG=${{ github.ref_name }}
+          VERSION=${TAG#v}
+          # Pull the block between this version heading and the next heading
+          NOTES=$(sed -n "/^## \[${VERSION}\]/,/^## \[/{ /^## \[${VERSION}\]/d; /^## \[/d; p }" CHANGELOG.md)
+          echo "notes<<EOF" >> "$GITHUB_OUTPUT"
+          echo "$NOTES" >> "$GITHUB_OUTPUT"
+          echo "EOF" >> "$GITHUB_OUTPUT"
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ github.ref_name }}
+          name: ${{ github.ref_name }}
+          body: ${{ steps.changelog.outputs.notes }}
+          draft: false
+          prerelease: ${{ contains(github.ref_name, '-') }}
+          files: |
+            TransformationSwiftUICLI-macos.tar.gz
+            TransformationSwiftUICLI-macos.tar.gz.sha256
+          generate_release_notes: false

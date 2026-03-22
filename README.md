@@ -4,6 +4,8 @@
 <img src="https://img.shields.io/badge/macOS-13.0%2B-000000?style=for-the-badge&logo=apple&logoColor=white" />
 <img src="https://img.shields.io/badge/License-MIT-blue?style=for-the-badge" />
 <img src="https://img.shields.io/badge/SPM-compatible-brightgreen?style=for-the-badge&logo=swift&logoColor=white" />
+<img src="https://img.shields.io/github/v/release/kanchanproseth/TransformationSwiftUI?style=for-the-badge&label=release&color=orange" />
+<img src="https://img.shields.io/github/actions/workflow/status/kanchanproseth/TransformationSwiftUI/ci.yml?branch=main&style=for-the-badge&label=CI" />
 
 <br /><br />
 
