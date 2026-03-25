@@ -4,7 +4,6 @@
 If you believe you have found a security vulnerability, please report it privately.
 
 Preferred options:
-- GitHub Security Advisory: https://github.com/kanchanproseth/TransformationSwiftUI/security/advisories
 - Email: chanproseth.kan@gmail.com
 
 Please include:
