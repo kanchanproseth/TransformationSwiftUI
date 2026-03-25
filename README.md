@@ -15,7 +15,7 @@
 
 *Parses Swift source, storyboards, XIBs, and Auto Layout constraints. Generates production-ready SwiftUI with `NavigationStack`, `TabView`, `NavigationLink`, sheets, and custom component wrappers. Optionally powered by Claude, GPT-4o, or a local LLM.*
 
-[**Quick Start**](#installation) · [**How It Works**](#how-it-works) · [**AI Integration**](#ai-assisted-conversion) · [**Configuration**](#configuration) · [**Contributing**](#contributing)
+[**Quick Start**](#installation) · [**How It Works**](#how-it-works) · [**AI Integration**](#ai-assisted-conversion) · [**Configuration**](#configuration) · [**API Docs**](docs/API.md) · [**Changelog**](CHANGELOG.md) · [**Contributing**](#contributing)
 
 </div>
 
