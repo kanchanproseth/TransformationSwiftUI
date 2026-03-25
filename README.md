@@ -15,7 +15,7 @@
 
 *Parses Swift source, storyboards, XIBs, and Auto Layout constraints. Generates production-ready SwiftUI with `NavigationStack`, `TabView`, `NavigationLink`, sheets, and custom component wrappers. Optionally powered by Claude, GPT-4o, or a local LLM.*
 
-[**Quick Start**](#installation) · [**How It Works**](#how-it-works) · [**AI Integration**](#ai-assisted-conversion) · [**Configuration**](#configuration) · [**API Docs**](docs/API.md) · [**Changelog**](CHANGELOG.md) · [**Contributing**](#contributing)
+[**Quick Start**](#installation) · [**How It Works**](#how-it-works) · [**AI Integration**](#ai-assisted-conversion) · [**Configuration**](#configuration) · [**API Docs**](docs/API.md) · [**Roadmap**](ROADMAP.md) · [**Changelog**](CHANGELOG.md) · [**Contributing**](#contributing)
 
 </div>
 
@@ -467,28 +467,29 @@ No other external dependencies. Storyboard and XIB parsing uses Foundation's bui
 
 Contributions are welcome. Please read [CONTRIBUTING.md](CONTRIBUTING.md) before opening a pull request.
 
-Some good starting points:
+Good starting points:
 
 - Add support for additional UIKit element types in `UIKitElementType.swift`
 - Improve layout inference in `LayoutPatternEngine.swift`
 - Add more AI prompt strategies in `AIPromptBuilder.swift`
 - Expand the test suite in `TransformationSwiftUITests/`
 
+See [ROADMAP.md](ROADMAP.md) for planned features — pick something from the roadmap if you're looking for a meaningful contribution. Add a `CHANGELOG.md` entry under `Unreleased` in every PR.
+
 ---
 
-## Code of Conduct
+## Community
 
-This project follows the [Contributor Covenant](CODE_OF_CONDUCT.md). Please read it before participating.
+| | |
+|---|---|
+| Roadmap | [ROADMAP.md](ROADMAP.md) — planned features and research directions |
+| Code of Conduct | [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md) — Contributor Covenant v2.1 |
+| Security | [SECURITY.md](SECURITY.md) — how to report vulnerabilities privately |
+| Support | [SUPPORT.md](SUPPORT.md) — where to ask questions and file bugs |
+| Discussions | [GitHub Discussions](https://github.com/kanchanproseth/TransformationSwiftUI/discussions) |
+| Issues | [GitHub Issues](https://github.com/kanchanproseth/TransformationSwiftUI/issues) |
 
-## Security
-
-If you discover a security issue, please report it responsibly. See [SECURITY.md](SECURITY.md) for details.
-
-## Support
-
-For questions, use [Discussions](https://github.com/kanchanproseth/TransformationSwiftUI/discussions). For bugs and feature requests, [open an issue](https://github.com/kanchanproseth/TransformationSwiftUI/issues).
-
-See [SUPPORT.md](SUPPORT.md) for details.
+---
 
 ## License
 
