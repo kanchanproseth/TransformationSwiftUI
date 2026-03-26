@@ -114,7 +114,7 @@ public struct CustomComponentDefinitionGenerator {
             return [
                 "\(pad)Canvas { context, size in",
                 "\(pad3)// Custom drawing — see \(drawingModel.className)View generated file",
-                "\(pad)}"
+                "\(pad)}",
             ]
         }
     }
@@ -129,7 +129,7 @@ public struct CustomComponentDefinitionGenerator {
         case .imageView, .image:
             return [
                 pad + Strings.imagePrefix + component.name + Strings.imageSuffix,
-                pad + Strings.resizableModifier
+                pad + Strings.resizableModifier,
             ]
         case .textField:
             return [pad + Strings.textFieldPrefix + component.name + Strings.textFieldInfix + Strings.emptyStringLiteral + Strings.textFieldSuffix]
@@ -146,7 +146,7 @@ public struct CustomComponentDefinitionGenerator {
         default:
             return [
                 pad + Strings.customComponentCommentPrefix + component.name + Strings.customComponentCommentInfix + component.resolvedBaseType.typeName,
-                pad + Strings.emptyView
+                pad + Strings.emptyView,
             ]
         }
     }

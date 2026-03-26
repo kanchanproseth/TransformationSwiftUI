@@ -254,7 +254,7 @@ public struct SwiftUICodeGenerator {
         .activityIndicatorView: ActivityIndicatorRenderer(),
         .segmentedControl: SegmentedControlRenderer(),
         .pageControl: PageControlRenderer(),
-        .visualEffectView: VisualEffectRenderer()
+        .visualEffectView: VisualEffectRenderer(),
     ]
 
     /// Renders a single node based on its UIKit type, with custom component support.
@@ -291,9 +291,9 @@ public struct SwiftUICodeGenerator {
             var lines = [
                 indentString + Strings.groupOpen,
                 indentString + Strings.indentUnit + Strings.emptyView,
-                indentString + Strings.closingBrace
+                indentString + Strings.closingBrace,
             ]
-            lines.append(contentsOf: modifiers)
+                        lines.append(contentsOf: modifiers)
             return lines
         }
 

@@ -19,7 +19,7 @@ public struct UIElementNode {
     public var type: UIKitElementType?
 
     /// The custom component name when the element resolves to a custom class.
-    public var customComponentName: String? = nil
+    public var customComponentName: String?
 
     /// Child elements nested inside this node.
     public var children: [UIElementNode] = []
@@ -34,7 +34,7 @@ public struct UIElementNode {
     public var controlActions: [ControlAction] = []
 
     /// Cell item model name for tableView/collectionView data source (e.g. "ProductCell").
-    public var cellTypeName: String? = nil
+    public var cellTypeName: String?
 
     /// Whether this list element has a nested tableView or collectionView inside its cells.
     public var hasNestedList: Bool = false

@@ -227,7 +227,6 @@ public struct DrawingRenderer {
     // MARK: - Preview generation
 
     private static func generatePreview(for model: DrawingModel) -> [String] {
-        let typeName = model.isSimpleShape ? model.className : "\(model.className)View"
         let previewContent = model.isSimpleShape
             ? "\(model.className)().fill(Color.primary).frame(width: 100, height: 100)"
             : "\(model.className)View()"
@@ -235,7 +234,7 @@ public struct DrawingRenderer {
         return [
             "#Preview {",
             "    \(previewContent)",
-            "}"
+            "}",
         ]
     }
 
@@ -259,9 +258,9 @@ public struct DrawingRenderer {
             "Color.lightGray": "Color(white: 0.8)",
             "Color.black": "Color.black",
             "Color.white": "Color.white",
-            "Color.clear": "Color.clear"
+            "Color.clear": "Color.clear",
         ]
-        return mappings[expr] ?? expr
+                return mappings[expr] ?? expr
     }
 
     // MARK: - String constants

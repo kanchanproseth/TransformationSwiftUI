@@ -23,15 +23,15 @@ struct IBSegueMapper {
     /// based on the `modalPresentationStyle` attribute — use `segueKind(forKindString:segueElement:)`
     /// to apply that refinement automatically.
     private static let kindMap: [String: SegueKind] = [
-        "show":             .push,
-        "push":             .push,          // legacy pre-iOS 8
-        "showDetail":       .sheet,
-        "presentation":     .sheet,
-        "modal":            .sheet,         // legacy pre-iOS 8
+        "show": .push,
+        "push": .push,          // legacy pre-iOS 8
+        "showDetail": .sheet,
+        "presentation": .sheet,
+        "modal": .sheet,         // legacy pre-iOS 8
         "popoverPresentation": .sheet,
-        "embed":            .embed,
-        "unwind":           .unwind,
-        "custom":           .custom,
+        "embed": .embed,
+        "unwind": .unwind,
+        "custom": .custom,
     ]
 
     /// Resolves the `SegueKind` for a `<segue>` XML element, applying modal style refinement.

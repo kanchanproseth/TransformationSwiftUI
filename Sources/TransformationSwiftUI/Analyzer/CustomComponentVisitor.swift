@@ -26,7 +26,7 @@ public class CustomComponentVisitor: SyntaxVisitor {
     }
 
     /// Records classes that inherit from known UIView/UIControl types.
-    public override func visit(_ node: ClassDeclSyntax) -> SyntaxVisitorContinueKind {
+    override public func visit(_ node: ClassDeclSyntax) -> SyntaxVisitorContinueKind {
         guard let inheritanceClause = node.inheritanceClause else {
             return .visitChildren
         }
@@ -40,7 +40,7 @@ public class CustomComponentVisitor: SyntaxVisitor {
 
         // Skip UIViewController subclasses (handled by ViewControllerVisitor)
         for inheritedType in inheritanceClause.inheritedTypes {
-            let typeName = inheritedType.typeName.description
+            let typeName = inheritedType.type.description
                 .trimmingCharacters(in: .whitespacesAndNewlines)
             if UIKitElementType.isViewController(typeName: typeName) {
                 return .visitChildren
@@ -49,7 +49,7 @@ public class CustomComponentVisitor: SyntaxVisitor {
 
         // Check each inherited type against known view classes
         for inheritedType in inheritanceClause.inheritedTypes {
-            let superName = inheritedType.typeName.description
+            let superName = inheritedType.type.description
                 .trimmingCharacters(in: .whitespacesAndNewlines)
             if knownViewClasses.contains(superName) {
                 discoveries.append((name: className, superclassName: superName, node: node))

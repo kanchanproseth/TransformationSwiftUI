@@ -8,9 +8,7 @@
 // Description: Tests for UIKitElementType parsing and helpers.
 //
 
-import Foundation
 import Testing
-import SwiftParser
 @testable import TransformationSwiftUI
 
 struct UIKitElementTypeTests {
@@ -69,7 +67,7 @@ struct SwiftUIRendererTests {
                 UIElementNode(name: "firstLabel", type: .label, children: []),
                 UIElementNode(name: "secondLabel", type: .label, children: [])
             ]
-        )
+            )
         let lines = StackViewRenderer().render(node: node, constraints: [], patterns: [], indent: 1)
         #expect(lines.first?.contains("VStack") == true)
     }
@@ -215,7 +213,7 @@ struct SwiftUICodeGeneratorTests {
                 secondItem: "view",
                 secondAttribute: .top,
                 constant: 12
-            )
+            ),
         ]
 
         let lines = SwiftUICodeGenerator.modifierLines(for: "avatar", constraints: constraints, indent: 1)
@@ -227,7 +225,7 @@ struct SwiftUICodeGeneratorTests {
     func containerNameUsesZStackPattern() {
         let children = [
             UIElementNode(name: "badge", type: .label, children: []),
-            UIElementNode(name: "icon", type: .imageView, children: [])
+            UIElementNode(name: "icon", type: .imageView, children: []),
         ]
         let patterns = [LayoutPattern(type: .zStack, elements: ["badge", "icon"])]
         #expect(SwiftUICodeGenerator.containerName(for: children, patterns: patterns) == "ZStack")
@@ -253,7 +251,7 @@ struct LayoutPatternEngineTests {
                 secondItem: "title",
                 secondAttribute: .trailing,
                 constant: 12
-            )
+            ),
         ]
 
         let patterns = LayoutPatternEngine.inferPatterns(from: constraints)
@@ -279,7 +277,7 @@ struct LayoutPatternEngineTests {
                 secondItem: "icon",
                 secondAttribute: .centerY,
                 constant: 0
-            )
+            ),
         ]
 
         let patterns = LayoutPatternEngine.inferPatterns(from: constraints)
@@ -304,7 +302,7 @@ struct LayoutPatternEngineTests {
                 secondItem: "view",
                 secondAttribute: .leading,
                 constant: 12
-            )
+            ),
         ]
 
         let hints = LayoutPatternEngine.inferHints(from: constraints)

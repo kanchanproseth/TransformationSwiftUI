@@ -103,7 +103,7 @@ public class BusinessLogicVisitor: SyntaxVisitor {
 
     // MARK: - Function tracking
 
-    public override func visit(_ node: FunctionDeclSyntax) -> SyntaxVisitorContinueKind {
+    override public func visit(_ node: FunctionDeclSyntax) -> SyntaxVisitorContinueKind {
         currentFunction = node.name.text
         currentFunctionBody = node.body?.description ?? ""
 
@@ -167,14 +167,14 @@ public class BusinessLogicVisitor: SyntaxVisitor {
         return .visitChildren
     }
 
-    public override func visitPost(_ node: FunctionDeclSyntax) {
+    override public func visitPost(_ node: FunctionDeclSyntax) {
         currentFunction = "unknown"
         currentFunctionBody = ""
     }
 
     // MARK: - Call expression detection
 
-    public override func visit(_ node: FunctionCallExprSyntax) -> SyntaxVisitorContinueKind {
+    override public func visit(_ node: FunctionCallExprSyntax) -> SyntaxVisitorContinueKind {
         guard let member = node.calledExpression.as(MemberAccessExprSyntax.self) else {
             return .visitChildren
         }

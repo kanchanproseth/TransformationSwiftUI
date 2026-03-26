@@ -1,11 +1,12 @@
 <div align="center">
 
-<img src="https://img.shields.io/badge/Swift-5.9%2B-F05138?style=for-the-badge&logo=swift&logoColor=white" />
+<img src="https://img.shields.io/badge/Swift-5.10%2B-F05138?style=for-the-badge&logo=swift&logoColor=white" />
 <img src="https://img.shields.io/badge/macOS-13.0%2B-000000?style=for-the-badge&logo=apple&logoColor=white" />
 <img src="https://img.shields.io/badge/License-MIT-blue?style=for-the-badge" />
 <img src="https://img.shields.io/badge/SPM-compatible-brightgreen?style=for-the-badge&logo=swift&logoColor=white" />
 <img src="https://img.shields.io/github/v/release/kanchanproseth/TransformationSwiftUI?style=for-the-badge&label=release&color=orange" />
 <img src="https://img.shields.io/github/actions/workflow/status/kanchanproseth/TransformationSwiftUI/ci.yml?branch=main&style=for-the-badge&label=CI" />
+<img src="https://img.shields.io/endpoint?url=https://gist.githubusercontent.com/kanchanproseth/93e33bb1b85da95cfb6c475b73c74682/raw/test-count.json&style=for-the-badge" />
 
 <br /><br />
 
@@ -460,6 +461,26 @@ TransformationSwiftUI/
 | [apple/swift-syntax](https://github.com/apple/swift-syntax) | Swift AST parsing (SwiftSyntax + SwiftParser products) |
 
 No other external dependencies. Storyboard and XIB parsing uses Foundation's built-in `XMLDocument`.
+
+---
+
+## Tests
+
+The test suite uses Swift Testing (`import Testing`) and runs on every CI push. The badge in the header reflects the number of passing tests on `main` in real time.
+
+Run tests locally:
+
+```bash
+swift test
+```
+
+| Suite | Tests | What it covers |
+|---|---|---|
+| `UIKitElementTypeTests` | 4 | `UIKitElementType.from(typeName:)` parsing, optional/generic suffixes, `isViewController` |
+| `SwiftUIRendererTests` | 14 | Every renderer: Label, Button, Image, StackView, View (ZStack pattern), ScrollView, TextField, TextView, Toggle, Slider, ProgressView, List, ActivityIndicator, SegmentedControl, PageControl, VisualEffect |
+| `SwiftUICodeGeneratorTests` | 3 | `generate(for:)` state declarations, `modifierLines(for:)` frame/padding, `containerName(for:)` pattern lookup |
+| `LayoutPatternEngineTests` | 3 | VStack/HStack/ZStack inference from constraints, `inferHints` frame and padding output |
+| **Total** | **26** | |
 
 ---
 

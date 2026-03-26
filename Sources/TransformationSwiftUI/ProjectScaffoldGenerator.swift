@@ -70,7 +70,7 @@ public struct ProjectScaffoldGenerator {
         let entryViewName: String
         if let initial = graph.initialViewControllerName, allVCNames.contains(initial) {
             entryViewName = initial + "View"
-        } else if let first = allVCNames.sorted().first {
+        } else if let first = allVCNames.min() {
             entryViewName = first + "View"
         } else {
             entryViewName = "AppFlowView"

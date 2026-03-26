@@ -32,7 +32,7 @@ public class ViewHierarchyVisitor: SyntaxVisitor {
     }
 
     /// Records variable declarations that correspond to view instances.
-    public override func visit(_ node: VariableDeclSyntax) -> SyntaxVisitorContinueKind {
+    override public func visit(_ node: VariableDeclSyntax) -> SyntaxVisitorContinueKind {
         for binding in node.bindings {
             if let identifierPattern = binding.pattern.as(IdentifierPatternSyntax.self) {
                 let name = identifierPattern.identifier.text
@@ -41,7 +41,7 @@ public class ViewHierarchyVisitor: SyntaxVisitor {
                 let inferredType = typeName ?? inferredTypeName(from: binding.initializer?.value)
 
                 let elementType: UIKitElementType?
-                var customName: String? = nil
+                var customName: String?
 
                 if let registry = componentRegistry, let typeString = inferredType {
                     let resolved = registry.resolveType(typeString)
@@ -105,7 +105,7 @@ public class ViewHierarchyVisitor: SyntaxVisitor {
     }
 
     /// Records view hierarchy edges from addSubview and addArrangedSubview calls.
-    public override func visit(_ node: FunctionCallExprSyntax) -> SyntaxVisitorContinueKind {
+    override public func visit(_ node: FunctionCallExprSyntax) -> SyntaxVisitorContinueKind {
 
         guard let memberAccess = node.calledExpression.as(MemberAccessExprSyntax.self) else {
             return .visitChildren

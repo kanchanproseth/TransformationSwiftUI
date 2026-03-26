@@ -32,7 +32,7 @@ public class AnimationVisitor: SyntaxVisitor {
 
     // MARK: - Function context tracking
 
-    public override func visit(_ node: FunctionDeclSyntax) -> SyntaxVisitorContinueKind {
+    override public func visit(_ node: FunctionDeclSyntax) -> SyntaxVisitorContinueKind {
         currentFunctionName = node.name.text
         currentFunctionIsObjc = node.attributes.contains { attr in
             attr.as(AttributeSyntax.self)?.attributeName.description.trimmingCharacters(in: .whitespaces) == Strings.objc
@@ -40,14 +40,14 @@ public class AnimationVisitor: SyntaxVisitor {
         return .visitChildren
     }
 
-    public override func visitPost(_ node: FunctionDeclSyntax) {
+    override public func visitPost(_ node: FunctionDeclSyntax) {
         currentFunctionName = nil
         currentFunctionIsObjc = false
     }
 
     // MARK: - Function call detection
 
-    public override func visit(_ node: FunctionCallExprSyntax) -> SyntaxVisitorContinueKind {
+    override public func visit(_ node: FunctionCallExprSyntax) -> SyntaxVisitorContinueKind {
         // UIView.animate(...) and UIView.transition(...)
         if let memberAccess = node.calledExpression.as(MemberAccessExprSyntax.self),
            let base = memberAccess.base?.description.trimmingCharacters(in: .whitespacesAndNewlines),
@@ -91,7 +91,6 @@ public class AnimationVisitor: SyntaxVisitor {
         var duration: Double?
         var delay: Double?
         var dampingFraction: Double?
-        var initialVelocity: Double?
         var animationsClosure: ClosureExprSyntax?
         var hasCompletion = false
 
@@ -131,7 +130,7 @@ public class AnimationVisitor: SyntaxVisitor {
         let propertyChanges = animationsClosure.map { parseAnimationClosure($0) } ?? []
 
         // Group by target element name
-        let byTarget = Dictionary(grouping: propertyChanges, by: { $0.0 })
+        let byTarget = Dictionary(grouping: propertyChanges) { $0.0 }
         if byTarget.isEmpty {
             let model = AnimationModel(
                 kind: kind,

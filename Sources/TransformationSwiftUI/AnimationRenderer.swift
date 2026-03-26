@@ -63,7 +63,7 @@ public struct AnimationRenderer {
             case .translation:
                 return [
                     "\(Strings.statePrefix)\(elementName)\(Strings.offsetXSuffix): CGFloat = 0",
-                    "\(Strings.statePrefix)\(elementName)\(Strings.offsetYSuffix): CGFloat = 0"
+                    "\(Strings.statePrefix)\(elementName)\(Strings.offsetYSuffix): CGFloat = 0",
                 ]
             case .identity:
                 return ["\(Strings.statePrefix)\(elementName)\(Strings.scaleSuffix): CGFloat = 1.0"]
@@ -124,7 +124,7 @@ public struct AnimationRenderer {
             case .identity:
                 return ".scaleEffect(\(elementName)\(Strings.scaleSuffix))"
             }
-        case .frame, .backgroundColor:
+        case .frame:
             return nil
         }
     }

@@ -175,13 +175,13 @@ public struct CloudAIConversionProvider: AIConversionProvider {
             Strings.jsonMessages: [
                 [Strings.jsonRole: Strings.roleUser, Strings.jsonContent: userPrompt]
             ],
-            Strings.jsonTemperature: 0.2
+            Strings.jsonTemperature: 0.2,
         ]
         let data = try JSONSerialization.data(withJSONObject: payload)
         let headers: [(String, String)] = [
             (Strings.contentTypeHeader, Strings.contentTypeJson),
             (Strings.anthropicKeyHeader, apiKey),
-            (Strings.anthropicVersionHeader, Strings.anthropicVersionValue)
+            (Strings.anthropicVersionHeader, Strings.anthropicVersionValue),
         ]
         return (data, headers)
     }
@@ -194,14 +194,14 @@ public struct CloudAIConversionProvider: AIConversionProvider {
             Strings.jsonModel: model,
             Strings.jsonMessages: [
                 [Strings.jsonRole: Strings.roleSystem, Strings.jsonContent: systemPrompt],
-                [Strings.jsonRole: Strings.roleUser, Strings.jsonContent: userPrompt]
+                [Strings.jsonRole: Strings.roleUser, Strings.jsonContent: userPrompt],
             ],
-            Strings.jsonTemperature: 0.2
+            Strings.jsonTemperature: 0.2,
         ]
         let data = try JSONSerialization.data(withJSONObject: payload)
         let headers: [(String, String)] = [
             (Strings.contentTypeHeader, Strings.contentTypeJson),
-            (Strings.authorizationHeader, Strings.bearerPrefix + apiKey)
+            (Strings.authorizationHeader, Strings.bearerPrefix + apiKey),
         ]
         return (data, headers)
     }

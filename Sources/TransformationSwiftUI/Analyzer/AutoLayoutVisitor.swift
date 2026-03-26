@@ -23,7 +23,7 @@ public class AutoLayoutVisitor: SyntaxVisitor {
     }
 
     /// Captures anchor-based `constraint(...)` calls into LayoutConstraint models.
-    public override func visit(_ node: FunctionCallExprSyntax) -> SyntaxVisitorContinueKind {
+    override public func visit(_ node: FunctionCallExprSyntax) -> SyntaxVisitorContinueKind {
         guard let memberAccess = node.calledExpression.as(MemberAccessExprSyntax.self) else {
             return .visitChildren
         }
@@ -140,4 +140,3 @@ public class AutoLayoutVisitor: SyntaxVisitor {
         static let heightAnchor = "heightAnchor"
     }
 }
-

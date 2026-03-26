@@ -210,7 +210,7 @@ public struct NavigationFlowGenerator {
         return [
             "\(pad)NavigationStack {",
             "\(pad)    \(rootVC)View()",
-            "\(pad)}"
+            "\(pad)}",
         ]
     }
 

@@ -59,7 +59,7 @@ public struct ImageViewRenderer: SwiftUIRenderStrategy {
         let imageName = node.properties[Strings.imageNameKey] ?? node.name
         var lines = [
             indentString + Strings.imagePrefix + imageName + Strings.imageSuffix,
-            indentString + Strings.resizableModifier
+            indentString + Strings.resizableModifier,
         ]
         lines.append(contentsOf: SwiftUICodeGenerator.modifierLines(for: node.name, constraints: constraints, indent: indent))
         return lines

@@ -1,4 +1,4 @@
-// swift-tools-version: 5.9
+// swift-tools-version: 5.10
 import PackageDescription
 
 let package = Package(
@@ -19,7 +19,11 @@ let package = Package(
     dependencies: [
         .package(
             url: "https://github.com/apple/swift-syntax.git",
-            from: "509.0.0"
+            from: "600.0.0"
+        ),
+        .package(
+            url: "https://github.com/realm/SwiftLint.git",
+            "0.58.0"..<"0.59.0"
         )
     ],
     targets: [
@@ -28,15 +32,24 @@ let package = Package(
             dependencies: [
                 .product(name: "SwiftSyntax", package: "swift-syntax"),
                 .product(name: "SwiftParser", package: "swift-syntax")
+            ],
+            plugins: [
+                .plugin(name: "SwiftLintBuildToolPlugin", package: "SwiftLint")
             ]
         ),
         .executableTarget(
             name: "TransformationSwiftUICLI",
-            dependencies: ["TransformationSwiftUI"]
+            dependencies: ["TransformationSwiftUI"],
+            plugins: [
+                .plugin(name: "SwiftLintBuildToolPlugin", package: "SwiftLint")
+            ]
         ),
         .testTarget(
             name: "TransformationSwiftUITests",
-            dependencies: ["TransformationSwiftUI"]
+            dependencies: ["TransformationSwiftUI"],
+            plugins: [
+                .plugin(name: "SwiftLintBuildToolPlugin", package: "SwiftLint")
+            ]
         )
     ]
 )

@@ -33,10 +33,10 @@ public struct ViewControllerModel {
     public var isNavigationRoot: Bool = false
 
     /// The navigation bar title, when defined in Interface Builder.
-    public var navigationTitle: String? = nil
+    public var navigationTitle: String?
 
     /// The tab bar item configuration when this controller is used in a tab bar.
-    public var tabBarItem: TabBarItemInfo? = nil
+    public var tabBarItem: TabBarItemInfo?
 
     // MARK: - Business logic metadata (populated from Swift source analysis)
 

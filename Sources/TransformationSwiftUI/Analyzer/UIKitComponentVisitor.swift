@@ -24,7 +24,7 @@ public class UIKitComponentVisitor: SyntaxVisitor {
     }
 
     /// Visits variable declarations and records matching UIKit types.
-    public override func visit(_ node: VariableDeclSyntax) -> SyntaxVisitorContinueKind {
+    override public func visit(_ node: VariableDeclSyntax) -> SyntaxVisitorContinueKind {
 
         for binding in node.bindings {
 

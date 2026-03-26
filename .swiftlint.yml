@@ -1,0 +1,117 @@
+# SwiftLint configuration for TransformationSwiftUI
+# https://github.com/realm/SwiftLint
+
+included:
+  - Sources
+  - Tests
+
+excluded:
+  - .build
+  - UIKit2SwiftUI
+
+opt_in_rules:
+  - array_init
+  - closure_spacing
+  - collection_alignment
+  - contains_over_filter_count
+  - contains_over_filter_is_empty
+  - contains_over_first_not_nil
+  - contains_over_range_nil_comparison
+  - discouraged_object_literal
+  - empty_collection_literal
+  - empty_count
+  - empty_string
+  - explicit_init
+  - fallthrough
+  - fatal_error_message
+  - file_name_no_space
+  - first_where
+  - flatmap_over_map_reduce
+  - identical_operands
+  - joined_default_parameter
+  - last_where
+  - legacy_multiple
+  - literal_expression_end_indentation
+  - lower_acl_than_parent
+  - modifier_order
+  - multiline_parameters
+  - operator_usage_whitespace
+  - optional_enum_case_matching
+  - prefer_self_type_over_type_of_self
+  - prefer_zero_over_explicit_init
+  - reduce_into
+  - redundant_nil_coalescing
+  - redundant_type_annotation
+  - sorted_first_last
+  - static_operator
+  - toggle_bool
+  - trailing_closure
+  - unneeded_parentheses_in_closure_argument
+  - untyped_error_in_catch
+  - yoda_condition
+
+disabled_rules:
+  - todo                        # TODOs are acceptable in generated code comments
+  - line_length                 # Code generation produces long interpolated strings
+  - function_body_length        # Visitor switch statements are intentionally verbose
+  - type_body_length            # Large enums with many cases (UIKitElementType, etc.)
+  - multiline_arguments         # Builder-pattern calls span many lines intentionally
+  - multiline_function_chains   # Chained modifiers in code-gen are intentionally split
+  - multiline_literal_brackets  # Array/dict literals in builders span lines intentionally
+  - vertical_parameter_alignment_on_call  # Conflicts with multiline_arguments disable
+  - enum_case_associated_values_count     # DrawingCommand.curveTo/arc need 6 geometry params
+  - for_where                   # Pattern-guarded loops in visitors are clearer as if-statements
+  - large_tuple                 # Named tuples with 3 members are used intentionally in visitors
+
+# Rule configuration
+identifier_name:
+  min_length:
+    warning: 2
+    error: 1
+  excluded:
+    - id
+    - x
+    - y
+    - r
+    - w
+    - h
+    - t
+    - d
+    - s
+    - a
+    - b
+    - c
+    - i
+    - n
+    - v
+    - lh
+    - rh
+
+file_length:
+  warning: 750
+  error: 1000
+
+function_parameter_count:
+  warning: 7
+  error: 10
+
+cyclomatic_complexity:
+  warning: 50
+  error: 50
+
+nesting:
+  type_level:
+    warning: 2
+  function_level:
+    warning: 3
+
+type_name:
+  min_length: 3
+  excluded:
+    - ID
+
+trailing_comma:
+  mandatory_comma: true
+
+vertical_whitespace:
+  max_empty_lines: 1

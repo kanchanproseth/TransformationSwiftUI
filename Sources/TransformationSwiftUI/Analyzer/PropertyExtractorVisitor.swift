@@ -23,7 +23,7 @@ public class PropertyExtractorVisitor: SyntaxVisitor {
         Strings.typeDouble,
         Strings.typeFloat,
         Strings.typeInt,
-        Strings.typeCGFloat
+        Strings.typeCGFloat,
     ]
 
     /// Creates a visitor configured for source-accurate parsing.
@@ -32,7 +32,7 @@ public class PropertyExtractorVisitor: SyntaxVisitor {
     }
 
     /// Visits variable declarations and records eligible properties.
-    public override func visit(_ node: VariableDeclSyntax) -> SyntaxVisitorContinueKind {
+    override public func visit(_ node: VariableDeclSyntax) -> SyntaxVisitorContinueKind {
         let accessLevel = parseAccessLevel(from: node.modifiers)
 
         // Skip private/fileprivate — they won't become parameters

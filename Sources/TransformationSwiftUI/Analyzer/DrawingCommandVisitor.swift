@@ -39,13 +39,13 @@ public class DrawingCommandVisitor: SyntaxVisitor {
 
     // MARK: - draw(_ rect:) detection
 
-    public override func visit(_ node: FunctionDeclSyntax) -> SyntaxVisitorContinueKind {
+    override public func visit(_ node: FunctionDeclSyntax) -> SyntaxVisitorContinueKind {
         guard isDrawOverride(node) else { return .visitChildren }
         isInsideDrawMethod = true
         return .visitChildren
     }
 
-    public override func visitPost(_ node: FunctionDeclSyntax) {
+    override public func visitPost(_ node: FunctionDeclSyntax) {
         if isDrawOverride(node) {
             isInsideDrawMethod = false
         }
@@ -64,7 +64,7 @@ public class DrawingCommandVisitor: SyntaxVisitor {
 
     // MARK: - Drawing call detection
 
-    public override func visit(_ node: FunctionCallExprSyntax) -> SyntaxVisitorContinueKind {
+    override public func visit(_ node: FunctionCallExprSyntax) -> SyntaxVisitorContinueKind {
         guard isInsideDrawMethod else { return .visitChildren }
 
         guard let memberAccess = node.calledExpression.as(MemberAccessExprSyntax.self) else {
@@ -99,7 +99,7 @@ public class DrawingCommandVisitor: SyntaxVisitor {
 
     private func isPathMethod(_ name: String) -> Bool {
         [Strings.move, Strings.addLine, Strings.addCurve, Strings.addQuadCurve,
-         Strings.addArc, Strings.close, Strings.fill, Strings.stroke].contains(name)
+         Strings.addArc, Strings.close, Strings.fill, Strings.stroke, ].contains(name)
     }
 
     private func parseBezierPathCall(methodName: String, node: FunctionCallExprSyntax) {
@@ -149,7 +149,7 @@ public class DrawingCommandVisitor: SyntaxVisitor {
         [Strings.beginPath, Strings.fillPath, Strings.strokePath,
          Strings.setFillColor, Strings.setStrokeColor, Strings.setLineWidth,
          Strings.translateBy, Strings.scaleBy, Strings.rotate,
-         Strings.addRect, Strings.addEllipse].contains(name)
+         Strings.addRect, Strings.addEllipse, ].contains(name)
     }
 
     private func parseCGContextCall(methodName: String, node: FunctionCallExprSyntax) {

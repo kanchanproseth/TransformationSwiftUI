@@ -22,8 +22,8 @@ public class ViewControllerVisitor: SyntaxVisitor {
     }
 
     /// Records classes that inherit from UIViewController.
-    public override func visit(_ node: ClassDeclSyntax) -> SyntaxVisitorContinueKind {
-        if node.inheritanceClause?.inheritedTypes.contains(where: { UIKitElementType.isViewController(typeName: $0.typeName.description) }) == true {
+    override public func visit(_ node: ClassDeclSyntax) -> SyntaxVisitorContinueKind {
+        if node.inheritanceClause?.inheritedTypes.contains(where: { UIKitElementType.isViewController(typeName: $0.type.description) }) == true {
             controllers.append((name: node.name.text, node: node))
         }
         return .visitChildren

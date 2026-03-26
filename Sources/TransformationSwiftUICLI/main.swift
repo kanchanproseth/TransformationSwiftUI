@@ -13,4 +13,3 @@ import TransformationSwiftUI
 
 let exitCode = TransformationSwiftUIRunner.run(arguments: CommandLine.arguments)
 exit(Int32(exitCode))
-

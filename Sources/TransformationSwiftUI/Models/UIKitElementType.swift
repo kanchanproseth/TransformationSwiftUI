@@ -82,7 +82,7 @@ public enum UIKitElementType: CaseIterable {
         .button,
         .imageView,
         .textField,
-        .stackView
+        .stackView,
     ]
 
     /// Parses a type annotation into a UIKitElementType if known.

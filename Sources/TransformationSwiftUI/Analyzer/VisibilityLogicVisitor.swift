@@ -67,7 +67,7 @@ public class VisibilityLogicVisitor: SyntaxVisitor {
     private var currentFunction: String = "unknown"
 
     /// The current `if` condition text for attribution.
-    private var currentCondition: String? = nil
+    private var currentCondition: String?
 
     public init() {
         super.init(viewMode: .sourceAccurate)
@@ -75,30 +75,30 @@ public class VisibilityLogicVisitor: SyntaxVisitor {
 
     // MARK: - Function context tracking
 
-    public override func visit(_ node: FunctionDeclSyntax) -> SyntaxVisitorContinueKind {
+    override public func visit(_ node: FunctionDeclSyntax) -> SyntaxVisitorContinueKind {
         currentFunction = node.name.text
         return .visitChildren
     }
 
-    public override func visitPost(_ node: FunctionDeclSyntax) {
+    override public func visitPost(_ node: FunctionDeclSyntax) {
         currentFunction = "unknown"
     }
 
     // MARK: - If-condition context tracking
 
-    public override func visit(_ node: IfExprSyntax) -> SyntaxVisitorContinueKind {
+    override public func visit(_ node: IfExprSyntax) -> SyntaxVisitorContinueKind {
         currentCondition = node.conditions.description
             .trimmingCharacters(in: .whitespacesAndNewlines)
         return .visitChildren
     }
 
-    public override func visitPost(_ node: IfExprSyntax) {
+    override public func visitPost(_ node: IfExprSyntax) {
         currentCondition = nil
     }
 
     // MARK: - Assignment detection (view.isHidden = ..., view.alpha = ...)
 
-    public override func visit(_ node: ExpressionStmtSyntax) -> SyntaxVisitorContinueKind {
+    override public func visit(_ node: ExpressionStmtSyntax) -> SyntaxVisitorContinueKind {
         if let assignment = node.expression.as(SequenceExprSyntax.self) {
             handleSequenceExpression(assignment)
         }
@@ -151,7 +151,7 @@ public class VisibilityLogicVisitor: SyntaxVisitor {
 
     // MARK: - Function call detection (addSubview, removeFromSuperview)
 
-    public override func visit(_ node: FunctionCallExprSyntax) -> SyntaxVisitorContinueKind {
+    override public func visit(_ node: FunctionCallExprSyntax) -> SyntaxVisitorContinueKind {
         if let member = node.calledExpression.as(MemberAccessExprSyntax.self) {
             let methodName = member.declName.baseName.text
             let baseName = member.base?.description
