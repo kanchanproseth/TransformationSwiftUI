@@ -65,7 +65,7 @@ struct SwiftUIRendererTests {
             type: .stackView,
             children: [
                 UIElementNode(name: "firstLabel", type: .label, children: []),
-                UIElementNode(name: "secondLabel", type: .label, children: [])
+                UIElementNode(name: "secondLabel", type: .label, children: []),
             ]
             )
         let lines = StackViewRenderer().render(node: node, constraints: [], patterns: [], indent: 1)
