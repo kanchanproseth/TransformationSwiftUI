@@ -6,6 +6,7 @@
 <img src="https://img.shields.io/badge/SPM-compatible-brightgreen?style=for-the-badge&logo=swift&logoColor=white" />
 <img src="https://img.shields.io/github/v/release/kanchanproseth/TransformationSwiftUI?style=for-the-badge&label=release&color=orange" />
 <img src="https://img.shields.io/github/actions/workflow/status/kanchanproseth/TransformationSwiftUI/ci.yml?branch=main&style=for-the-badge&label=CI" />
+<img src="https://img.shields.io/github/actions/workflow/status/kanchanproseth/TransformationSwiftUI/ci.yml?branch=main&style=for-the-badge&label=SwiftLint&job=SwiftLint" />
 <img src="https://img.shields.io/endpoint?url=https://gist.githubusercontent.com/kanchanproseth/93e33bb1b85da95cfb6c475b73c74682/raw/test-count.json&style=for-the-badge" />
 
 <br /><br />
