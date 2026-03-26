@@ -62,13 +62,19 @@ jobs:
           echo "Tests passed: ${PASSED}, failed: ${FAILED}"
 
       - name: Update test-count badge Gist
-        if: github.ref == 'refs/heads/main' && matrix.swift == '6.0' && secrets.GIST_TOKEN != ''
+        if: github.ref == 'refs/heads/main' && matrix.swift == '6.0'
         env:
           GIST_TOKEN: ${{ secrets.GIST_TOKEN }}
           GIST_ID: ${{ secrets.TEST_COUNT_GIST_ID }}
           PASSED: ${{ steps.test_count.outputs.passed }}
           FAILED: ${{ steps.test_count.outputs.failed }}
         run: |
+          # Skip silently if secrets are not configured yet
+          if [ -z "${GIST_TOKEN}" ] || [ -z "${GIST_ID}" ]; then
+            echo "GIST_TOKEN or TEST_COUNT_GIST_ID secret not set — skipping badge update"
+            exit 0
+          fi
+
           COLOR="brightgreen"
           if [ "$FAILED" -gt "0" ]; then
             COLOR="red"
