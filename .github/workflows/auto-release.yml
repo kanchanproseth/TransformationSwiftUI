@@ -1,0 +1,86 @@
+name: Auto Release
+
+on:
+  push:
+    branches: [ main ]
+    paths-ignore:
+      - '**.md'
+      - 'docs/**'
+      - '.spi.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  auto-tag:
+    name: Bump version and tag
+    runs-on: ubuntu-latest
+    # Skip if the push was made by this workflow to avoid infinite loops
+    if: "!contains(github.event.head_commit.message, '[skip release]') && github.actor != 'github-actions[bot]'"
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4.2.2
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Determine next version
+        id: version
+        shell: bash
+        run: |
+          # Get latest semver tag (fallback to v0.0.0 if none)
+          LATEST=$(git tag --list 'v[0-9]*.[0-9]*.[0-9]*' | sort -V | tail -1)
+          LATEST=${LATEST:-v0.0.0}
+          echo "Latest tag: ${LATEST}"
+
+          # Strip leading 'v'
+          CURRENT=${LATEST#v}
+          MAJOR=$(echo "$CURRENT" | cut -d. -f1)
+          MINOR=$(echo "$CURRENT" | cut -d. -f2)
+          PATCH=$(echo "$CURRENT" | cut -d. -f3)
+
+          # Check if VERSION file exists and contains a different version
+          if [ -f VERSION ]; then
+            FILE_VER=$(cat VERSION | tr -d '[:space:]')
+            # Strip leading 'v' from file version if present
+            FILE_VER=${FILE_VER#v}
+            if [ "$FILE_VER" != "$CURRENT" ]; then
+              echo "VERSION file override: ${FILE_VER}"
+              NEXT="v${FILE_VER}"
+            else
+              NEXT="v${MAJOR}.${MINOR}.$((PATCH + 1))"
+            fi
+          else
+            NEXT="v${MAJOR}.${MINOR}.$((PATCH + 1))"
+          fi
+
+          echo "Next version: ${NEXT}"
+          echo "next=${NEXT}" >> "$GITHUB_OUTPUT"
+          echo "current=${LATEST}" >> "$GITHUB_OUTPUT"
+
+      - name: Check tag does not already exist
+        id: check_tag
+        shell: bash
+        run: |
+          NEXT="${{ steps.version.outputs.next }}"
+          if git rev-parse "$NEXT" >/dev/null 2>&1; then
+            echo "Tag ${NEXT} already exists — skipping release"
+            echo "skip=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "skip=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Configure git
+        if: steps.check_tag.outputs.skip == 'false'
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+      - name: Create and push tag
+        if: steps.check_tag.outputs.skip == 'false'
+        run: |
+          NEXT="${{ steps.version.outputs.next }}"
+          git tag "$NEXT" -m "Release ${NEXT}"
+          git push origin "$NEXT"
+          echo "Tagged and pushed ${NEXT}"
