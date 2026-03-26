@@ -54,11 +54,26 @@ jobs:
         id: test_count
         if: github.ref == 'refs/heads/main' && matrix.swift == '6.0'
         run: |
-          # Count lines matching "Test Case '...' passed"
-          PASSED=$(grep -c "Test Case '.*' passed" test_output.txt || echo "0")
-          FAILED=$(grep -c "Test Case '.*' failed" test_output.txt || echo "0")
-          echo "passed=${PASSED}" >> "$GITHUB_OUTPUT"
-          echo "failed=${FAILED}" >> "$GITHUB_OUTPUT"
+          # Swift Testing uses "Test run with N tests passed" style output
+          # XCTest uses "Test Case '...' passed" style output
+          # Count both to support either runner format
+          PASSED=0
+          FAILED=0
+
+          # Swift Testing format: "X tests passed"
+          ST_PASSED=$(grep -oE '[0-9]+ tests? passed' test_output.txt | grep -oE '[0-9]+' | tail -1 || true)
+          ST_FAILED=$(grep -oE '[0-9]+ tests? failed' test_output.txt | grep -oE '[0-9]+' | tail -1 || true)
+
+          # XCTest format: "Test Case '...' passed/failed"
+          XC_PASSED=$(grep -c "Test Case '.*' passed" test_output.txt || true)
+          XC_FAILED=$(grep -c "Test Case '.*' failed" test_output.txt || true)
+
+          # Use whichever gave results
+          PASSED=$(( ${ST_PASSED:-0} + ${XC_PASSED:-0} ))
+          FAILED=$(( ${ST_FAILED:-0} + ${XC_FAILED:-0} ))
+
+          printf 'passed=%s\n' "$PASSED" >> "$GITHUB_OUTPUT"
+          printf 'failed=%s\n' "$FAILED" >> "$GITHUB_OUTPUT"
           echo "Tests passed: ${PASSED}, failed: ${FAILED}"
 
       - name: Update test-count badge Gist

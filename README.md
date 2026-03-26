@@ -131,7 +131,6 @@ struct AppFlowView: View {
 |---|---|
 | macOS | 13.0 |
 | Swift | 5.9 |
-| Xcode | 15.0 (development only) |
 
 ---
 
