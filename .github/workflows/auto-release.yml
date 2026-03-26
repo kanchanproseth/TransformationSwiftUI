@@ -4,7 +4,6 @@ on:
   push:
     branches: [ main ]
     paths-ignore:
-      - '**.md'
       - 'docs/**'
       - '.spi.yml'
 
@@ -15,7 +14,7 @@ jobs:
   auto-tag:
     name: Bump version and tag
     runs-on: ubuntu-latest
-    # Skip if the push was made by this workflow to avoid infinite loops
+    # Skip commits made by this workflow (README version bump) to avoid infinite loops
     if: "!contains(github.event.head_commit.message, '[skip release]') && github.actor != 'github-actions[bot]'"
 
     steps:
@@ -56,7 +55,10 @@ jobs:
           fi
 
           echo "Next version: ${NEXT}"
+          # Version without leading 'v' for use in README
+          NEXT_BARE=${NEXT#v}
           echo "next=${NEXT}" >> "$GITHUB_OUTPUT"
+          echo "next_bare=${NEXT_BARE}" >> "$GITHUB_OUTPUT"
           echo "current=${LATEST}" >> "$GITHUB_OUTPUT"
 
       - name: Check tag does not already exist
@@ -76,6 +78,22 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
+
+      - name: Update README version
+        if: steps.check_tag.outputs.skip == 'false'
+        shell: bash
+        run: |
+          NEXT_BARE="${{ steps.version.outputs.next_bare }}"
+          # Replace the 'from: "x.y.z"' version in the SPM snippet
+          sed -i "s|\.package(url: \"https://github.com/kanchanproseth/TransformationSwiftUI.git\", from: \"[^\"]*\")|.package(url: \"https://github.com/kanchanproseth/TransformationSwiftUI.git\", from: \"${NEXT_BARE}\")|g" README.md
+          # Only commit if something changed
+          if git diff --quiet README.md; then
+            echo "README already up to date"
+          else
+            git add README.md
+            git commit -m "chore: bump README SPM version to ${NEXT_BARE} [skip release]"
+            git push origin main
+          fi
 
       - name: Create and push tag
         if: steps.check_tag.outputs.skip == 'false'
