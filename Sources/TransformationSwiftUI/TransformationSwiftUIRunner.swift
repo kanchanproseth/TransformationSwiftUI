@@ -80,6 +80,19 @@ public struct TransformationSwiftUIRunner {
 
         output(Strings.analyzingCustomComponents)
         let componentRegistry = CustomComponentAnalyzer.buildRegistry(from: files)
+
+        // Pre-scan: count total work units for progress reporting
+        // Components + Swift controllers + IB controllers
+        let componentCount = componentRegistry.components.count
+        let swiftControllerCount = files.reduce(0) { count, file in
+            count + ((try? SwiftParser.parseFile(file, componentRegistry: componentRegistry))?.count ?? 0)
+        }
+        let ibControllerCount = ibFiles.reduce(0) { count, ibFile in
+            count + StoryboardParser.parseFile(ibFile, componentRegistry: componentRegistry).count
+        }
+        let totalUnits = componentCount + swiftControllerCount + ibControllerCount
+        var completedUnits = 0
+
         if !componentRegistry.components.isEmpty {
             output(Strings.discoveredComponentsPrefix + String(componentRegistry.components.count) + Strings.discoveredComponentsSuffix)
             for (_, component) in componentRegistry.components.sorted(by: { $0.key < $1.key }) {
@@ -93,6 +106,8 @@ public struct TransformationSwiftUIRunner {
             }
 
             for (_, component) in componentRegistry.components.sorted(by: { $0.key < $1.key }) {
+                completedUnits += 1
+                output(progressLine(completed: completedUnits, total: totalUnits, label: component.name + Strings.viewFileSuffix))
                 let swiftUIDefinition = CustomComponentDefinitionGenerator.generate(for: component)
                 let outputFile = outputDirectory.appendingPathComponent(component.name + Strings.viewFileSuffix)
                 do {
@@ -116,6 +131,8 @@ public struct TransformationSwiftUIRunner {
                 let controllers = try SwiftParser.parseFile(file, componentRegistry: componentRegistry)
 
                 for controller in controllers {
+                    completedUnits += 1
+                    output(progressLine(completed: completedUnits, total: totalUnits, label: file.lastPathComponent + Strings.arrowSeparator + controller.name))
                     output(controller.name)
                     for element in controller.rootElements {
                         printNode(element, prefix: Strings.treePrefix, output: output)
@@ -216,11 +233,13 @@ public struct TransformationSwiftUIRunner {
                 }
 
                 for controller in controllers {
+                    completedUnits += 1
                     guard !allGeneratedNames.subtracting(controllers.map(\.name)).contains(controller.name) else {
-                        output(Strings.skipSwiftSourcePrefix + controller.name + Strings.skipSwiftSourceSuffix)
+                        output(progressLine(completed: completedUnits, total: totalUnits, label: ibFile.lastPathComponent + Strings.arrowSeparator + controller.name) + Strings.skippedSuffix)
                         continue
                     }
 
+                    output(progressLine(completed: completedUnits, total: totalUnits, label: ibFile.lastPathComponent + Strings.arrowSeparator + controller.name))
                     output(controller.name)
                     for element in controller.rootElements {
                         printNode(element, prefix: Strings.treePrefix, output: output)
@@ -583,6 +602,14 @@ public struct TransformationSwiftUIRunner {
         static let programmaticNavSuffix = " view controller(s)"
 
         static let creatingProjectScaffold = "Creating SwiftUI project scaffold..."
+        static let arrowSeparator = " → "
+        static let skippedSuffix = " [skipped — Swift source takes priority]"
+    }
+
+    /// Formats a progress line: [N/Total NN%] label
+    private static func progressLine(completed: Int, total: Int, label: String) -> String {
+        let percent = total > 0 ? (completed * 100) / total : 100
+        return "[\(completed)/\(total) \(percent)%] \(label)"
     }
 
     /// Recursively collects all tableView / collectionView nodes from an element tree.

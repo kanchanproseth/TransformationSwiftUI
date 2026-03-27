@@ -8,6 +8,11 @@ Complete reference for every public type, function, and property in the `Transfo
 
 - [Entry Point](#entry-point)
   - [TransformationSwiftUIRunner](#transformationswiftuirunner)
+- [Streaming Library API](#streaming-library-api)
+  - [ConversionSession](#conversionsession)
+  - [ConversionProgress](#conversionprogress)
+  - [ConversionEvent](#conversionevent)
+  - [ConversionError](#conversionerror)
 - [Code Generation](#code-generation)
   - [SwiftUICodeGenerator](#swiftuicodegenerator)
   - [SwiftUIRenderStrategy](#swiftuirenderstrategy)
@@ -121,6 +126,131 @@ let code = TransformationSwiftUIRunner.run(
     appName: "MyApp"
 )
 ```
+
+---
+
+## Streaming Library API
+
+Use `ConversionSession` when embedding the library inside an iOS or macOS app. It runs the same five-phase pipeline as `TransformationSwiftUIRunner` but streams typed `ConversionEvent` values over an `AsyncStream` instead of writing log lines to a closure.
+
+### ConversionSession
+
+```swift
+public struct ConversionSession: Sendable
+```
+
+Runs the full UIKit → SwiftUI pipeline and yields ``ConversionEvent`` values.
+
+#### Initializer
+
+```swift
+public init(
+    projectPath: String,
+    createProject: Bool = false,
+    appName: String? = nil,
+    aiProvider: (any AIConversionProvider & Sendable)? = nil,
+    aiConfig: AIConversionConfig = .fromEnvironment(),
+    ragConfig: RAGConfig = .fromEnvironment()
+)
+```
+
+| Parameter | Description |
+|---|---|
+| `projectPath` | Absolute path to the UIKit project root |
+| `createProject` | When `true`, also generates an Xcode project scaffold |
+| `appName` | App name for the scaffold; defaults to the folder name |
+| `aiProvider` | Custom AI provider; pass `nil` to use environment-variable detection |
+| `aiConfig` | AI feature flags and thresholds |
+| `ragConfig` | RAG indexing configuration |
+
+#### Methods
+
+```swift
+public func start() -> AsyncStream<ConversionEvent>
+```
+
+Returns a finite `AsyncStream`. Work runs on a detached background task; the stream ends with `.completed` or `.failed`.
+
+**Usage:**
+
+```swift
+let session = ConversionSession(projectPath: "/path/to/UIKitProject")
+
+for await event in session.start() {
+    switch event {
+    case .prepared(let total):
+        print("Total items: \(total)")
+    case .progress(let p):
+        progressBar.value = p.fraction        // 0.0 … 1.0
+        label.text = "\(p.percent)% — \(p.currentItem)"
+    case .skipped(let p):
+        print("Skipped: \(p.currentItem)")
+    case .log(let message):
+        console.append(message)
+    case .fileWritten(let path, let code):
+        print("Wrote → \(path)")
+    case .completed(let dir, let count):
+        print("Done: \(count) files in \(dir)")
+    case .failed(let error):
+        print("Error: \(error)")
+    }
+}
+```
+
+---
+
+### ConversionProgress
+
+```swift
+public struct ConversionProgress: Sendable
+```
+
+A progress snapshot emitted with each `.progress` and `.skipped` event.
+
+| Property | Type | Description |
+|---|---|---|
+| `completed` | `Int` | Items fully processed so far |
+| `total` | `Int` | Total items to process |
+| `fraction` | `Double` | `0.0 … 1.0` — suitable for `ProgressView(value:)` |
+| `percent` | `Int` | `0 … 100` — integer percentage |
+| `currentItem` | `String` | Human-readable label, e.g. `"LoginViewController.swift → LoginViewController"` |
+| `sourceFile` | `String?` | Absolute path of the source file being processed |
+| `outputFile` | `String?` | Absolute path of the output file (nil until written) |
+
+---
+
+### ConversionEvent
+
+```swift
+public enum ConversionEvent: Sendable
+```
+
+All events emitted by `ConversionSession.start()`.
+
+| Case | Payload | When emitted |
+|---|---|---|
+| `.prepared(totalItems:)` | `Int` | Once, after scanning, before any conversion begins |
+| `.progress(ConversionProgress)` | `ConversionProgress` | When each item starts converting |
+| `.skipped(ConversionProgress)` | `ConversionProgress` | When an IB controller is shadowed by a Swift source version |
+| `.log(String)` | `String` | Diagnostic messages (mirrors CLI output) |
+| `.fileWritten(outputPath:swiftUICode:)` | `String, String` | After each file is successfully written to disk |
+| `.completed(outputDirectory:totalWritten:)` | `String, Int` | When the entire session finishes |
+| `.failed(Error)` | `Error` | When a non-recoverable error stops the session |
+
+---
+
+### ConversionError
+
+```swift
+public enum ConversionError: Error, Sendable
+```
+
+Errors emitted via `.failed`.
+
+| Case | Description |
+|---|---|
+| `.outputDirectoryCreationFailed(String)` | Could not create the `SwiftUIMigrated` output directory; payload is the path |
+| `.noSourceFilesFound(String)` | No `.swift` or IB files found at the given project path |
 
 ---
 
@@ -1098,4 +1228,4 @@ Maps the IB segue `kind` attribute string to a `SegueKind`, applying `modalPrese
 
 ---
 
-*Generated from TransformationSwiftUI v0.0.1.*
+*Generated from TransformationSwiftUI v0.0.3.*
