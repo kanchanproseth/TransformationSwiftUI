@@ -67,9 +67,21 @@ public enum ConversionEvent: Sendable {
 }
 
 /// Errors thrown or emitted by a ``ConversionSession``.
-public enum ConversionError: Error, Sendable {
-    case outputDirectoryCreationFailed(String)
+public enum ConversionError: Error, LocalizedError, Sendable {
+    /// Could not create the output directory. `path` is the target path; `underlying` is the system error.
+    case outputDirectoryCreationFailed(path: String, underlying: String)
     case noSourceFilesFound(String)
+
+    public var errorDescription: String? {
+        switch self {
+        case .outputDirectoryCreationFailed(let path, let underlying):
+            return "Could not create output directory at \"\(path)\": \(underlying). " +
+                   "If running in a sandboxed app, make sure the project folder was selected " +
+                   "via NSOpenPanel and startAccessingSecurityScopedResource() is active."
+        case .noSourceFilesFound(let path):
+            return "No Swift or Interface Builder files found at \"\(path)\"."
+        }
+    }
 }
 
 // MARK: - ConversionSession
@@ -186,7 +198,10 @@ public struct ConversionSession: Sendable {
                 attributes: nil
             )
         } catch {
-            continuation.yield(.failed(ConversionError.outputDirectoryCreationFailed(outputDirectory.path)))
+            continuation.yield(.failed(ConversionError.outputDirectoryCreationFailed(
+                path: outputDirectory.path,
+                underlying: error.localizedDescription
+            )))
             return
         }
 
