@@ -13,6 +13,12 @@ _Nothing yet._
 
 ---
 
+## [0.0.5] — 2026-03-27
+
+_Nothing yet._
+
+---
+
 ## [0.0.4] — 2026-03-27
 
 _Nothing yet._
@@ -47,5 +53,6 @@ _Nothing yet._
 
 [0.0.1]: https://github.com/kanchanproseth/TransformationSwiftUI/releases/tag/v0.0.1
 
-[Unreleased]: https://github.com/kanchanproseth/TransformationSwiftUI/compare/v0.0.4...HEAD
+[Unreleased]: https://github.com/kanchanproseth/TransformationSwiftUI/compare/v0.0.5...HEAD
+[0.0.5]: https://github.com/kanchanproseth/TransformationSwiftUI/compare/v0.0.4...v0.0.5
 [0.0.4]: https://github.com/kanchanproseth/TransformationSwiftUI/releases/tag/v0.0.4

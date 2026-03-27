@@ -1228,4 +1228,4 @@ Maps the IB segue `kind` attribute string to a `SegueKind`, applying `modalPrese
 
 ---
 
-*Generated from TransformationSwiftUI v0.0.4.*
+*Generated from TransformationSwiftUI v0.0.5.*
