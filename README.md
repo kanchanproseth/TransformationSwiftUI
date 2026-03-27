@@ -156,7 +156,7 @@ cp .build/release/TransformationSwiftUICLI /usr/local/bin/TransformationSwiftUIC
 Add the dependency to your `Package.swift`:
 
 ```swift
-.package(url: "https://github.com/kanchanproseth/TransformationSwiftUI.git", from: "0.0.5")
+.package(url: "https://github.com/kanchanproseth/TransformationSwiftUI.git", from: "0.0.6")
 ```
 
 Then import and call the runner:
