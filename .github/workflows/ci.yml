@@ -113,23 +113,8 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4.2.2
 
-      - name: Select Xcode
-        uses: maxim-lobanov/setup-xcode@v1
-        with:
-          xcode-version: latest-stable
-
-      - name: Cache SPM dependencies
-        uses: actions/cache@v4.2.3
-        with:
-          path: |
-            .build/checkouts
-            .build/repositories
-          key: spm-${{ runner.os }}-${{ hashFiles('Package.resolved') }}
-          restore-keys: |
-            spm-${{ runner.os }}-
-
-      - name: Resolve dependencies
-        run: swift package resolve
+      - name: Install SwiftLint
+        run: brew install swiftlint
 
       - name: SwiftLint
-        run: swift package plugin --allow-writing-to-package-directory swiftlint --strict
+        run: swiftlint --strict
