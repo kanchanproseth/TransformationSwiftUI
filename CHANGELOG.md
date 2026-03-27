@@ -13,6 +13,12 @@ _Nothing yet._
 
 ---
 
+## [0.0.4] — 2026-03-27
+
+_Nothing yet._
+
+---
+
 ## [0.0.1] — 2026-03-21
 
 ### Added
@@ -39,5 +45,7 @@ _Nothing yet._
 - Swift Package Manager library target (`TransformationSwiftUI`) and CLI target (`TransformationSwiftUICLI`)
 - Unit tests for renderers, code generator, and layout engine (`UIKitElementTypeTests`)
 
-[Unreleased]: https://github.com/kanchanproseth/TransformationSwiftUI/compare/v0.0.1...HEAD
 [0.0.1]: https://github.com/kanchanproseth/TransformationSwiftUI/releases/tag/v0.0.1
+
+[Unreleased]: https://github.com/kanchanproseth/TransformationSwiftUI/compare/v0.0.4...HEAD
+[0.0.4]: https://github.com/kanchanproseth/TransformationSwiftUI/releases/tag/v0.0.4
