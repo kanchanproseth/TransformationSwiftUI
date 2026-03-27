@@ -79,20 +79,72 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
 
-      - name: Update README version
+      - name: Update versioned files
         if: steps.check_tag.outputs.skip == 'false'
         shell: bash
         run: |
           NEXT_BARE="${{ steps.version.outputs.next_bare }}"
-          # Replace the 'from: "x.y.z"' version in the SPM snippet
+          TODAY=$(date -u +%Y-%m-%d)
+          CHANGED_FILES=""
+
+          # ── README: bump SPM snippet version ─────────────────────────────────
           sed -i "s|\.package(url: \"https://github.com/kanchanproseth/TransformationSwiftUI.git\", from: \"[^\"]*\")|.package(url: \"https://github.com/kanchanproseth/TransformationSwiftUI.git\", from: \"${NEXT_BARE}\")|g" README.md
-          # Only commit if something changed
-          if git diff --quiet README.md; then
-            echo "README already up to date"
-          else
-            git add README.md
-            git commit -m "chore: bump README SPM version to ${NEXT_BARE} [skip release]"
+          if ! git diff --quiet README.md; then
+            CHANGED_FILES="$CHANGED_FILES README.md"
+          fi
+
+          # ── VERSION file ──────────────────────────────────────────────────────
+          echo "${NEXT_BARE}" > VERSION
+          if ! git diff --quiet VERSION; then
+            CHANGED_FILES="$CHANGED_FILES VERSION"
+          fi
+
+          # ── docs/API.md: bump footer version line ─────────────────────────────
+          if [ -f docs/API.md ]; then
+            sed -i "s|Generated from TransformationSwiftUI v[0-9][0-9]*\.[0-9][0-9]*\.[0-9][0-9]*|Generated from TransformationSwiftUI v${NEXT_BARE}|g" docs/API.md
+            if ! git diff --quiet docs/API.md; then
+              CHANGED_FILES="$CHANGED_FILES docs/API.md"
+            fi
+          fi
+
+          # ── CHANGELOG.md: rotate [Unreleased] → [X.Y.Z] ─────────────────────
+          if [ -f CHANGELOG.md ]; then
+            # Replace the [Unreleased] heading with the versioned heading
+            sed -i "s|^## \[Unreleased\]$|## [${NEXT_BARE}] — ${TODAY}|" CHANGELOG.md
+
+            # Insert new empty [Unreleased] section before the newly-versioned heading
+            sed -i "s|^## \[${NEXT_BARE}\] — ${TODAY}$|## [Unreleased]\n\n_Nothing yet._\n\n---\n\n## [${NEXT_BARE}] — ${TODAY}|" CHANGELOG.md
+
+            # Update or append footer reference links
+            # Remove old [Unreleased] link if it exists
+            sed -i "/^\[Unreleased\]: .*/d" CHANGELOG.md
+
+            # Update existing versioned link or append new one at EOF
+            PREV_TAG="${{ steps.version.outputs.current }}"
+            PREV_BARE="${PREV_TAG#v}"
+
+            if grep -q "^\[${PREV_BARE}\]: " CHANGELOG.md; then
+              # Insert new links before the first existing link line
+              sed -i "s|^\(\[${PREV_BARE}\]: .*\)$|[Unreleased]: https://github.com/kanchanproseth/TransformationSwiftUI/compare/v${NEXT_BARE}...HEAD\n[${NEXT_BARE}]: https://github.com/kanchanproseth/TransformationSwiftUI/compare/${PREV_TAG}...v${NEXT_BARE}\n\1|" CHANGELOG.md
+            else
+              # No prior link block — append both links
+              printf '\n[Unreleased]: https://github.com/kanchanproseth/TransformationSwiftUI/compare/v%s...HEAD\n[%s]: https://github.com/kanchanproseth/TransformationSwiftUI/releases/tag/v%s\n' \
+                "${NEXT_BARE}" "${NEXT_BARE}" "${NEXT_BARE}" >> CHANGELOG.md
+            fi
+
+            if ! git diff --quiet CHANGELOG.md; then
+              CHANGED_FILES="$CHANGED_FILES CHANGELOG.md"
+            fi
+          fi
+
+          # ── Commit all changed files together ─────────────────────────────────
+          if [ -n "$CHANGED_FILES" ]; then
+            # shellcheck disable=SC2086
+            git add $CHANGED_FILES
+            git commit -m "chore: release v${NEXT_BARE} — bump version, changelog, and docs [skip release]"
             git push origin main
+          else
+            echo "All versioned files already up to date"
           fi
 
       - name: Create and push tag
